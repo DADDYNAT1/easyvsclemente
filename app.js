@@ -1,6 +1,6 @@
 // Initialize Supabase
 const SUPABASE_URL = 'https://qflrkqitelvefnmkuexf.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmbHJrcWl0ZWx2ZWZubWt1ZXhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQwMTc1NDksImV4cCI6MjA0OTU5MzU0OX0.4k_MvgJa0WLaxN8r_VMJMJcspFGGrMsFi3DiOiJzdXE';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmbHJrcWl0ZWx2ZWZubWt1ZXhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxNTA5OTMsImV4cCI6MjA3MDcyNjk5M30.TxAhRkaPsRBl4Ni03pNMbZazwxeCwbhNTi6iE-69bV0';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Track which animation to play next
