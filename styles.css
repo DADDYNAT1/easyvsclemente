@@ -665,27 +665,188 @@ header h1 {
 }
 
 @media (max-width: 640px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header {
+        padding: 20px 15px;
+        margin-bottom: 20px;
+    }
+    
     header h1 {
-        font-size: 1.8rem;
+        font-size: 2rem;
+        letter-spacing: 1px;
+        margin-bottom: 15px;
     }
     
     .challenge-info {
-        flex-direction: column;
+        flex-direction: row;
+        gap: 10px;
+        font-size: 1rem;
+    }
+    
+    .timer-section,
+    .start-date {
+        padding: 12px 15px;
+        border-radius: 15px;
+    }
+    
+    .timer-section .value,
+    .timer-section .separator,
+    .timer-section .total,
+    .start-date .value {
+        font-size: 1.2rem;
+    }
+    
+    .label {
+        font-size: 0.75rem;
+        display: block;
+        margin-bottom: 2px;
+    }
+    
+    .portfolios-comparison {
         gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .portfolio {
+        min-height: auto;
+    }
+    
+    .portfolio-header {
+        padding: 15px;
+    }
+    
+    .portfolio-header h2 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        justify-content: center;
+    }
+    
+    .portfolio-icon {
+        width: 50px;
+        height: 50px;
     }
     
     .portfolio-stats {
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        gap: 8px;
+    }
+    
+    .stat-item {
+        padding: 8px;
+    }
+    
+    .stat-item .label {
+        font-size: 0.7rem;
+        margin-bottom: 4px;
+    }
+    
+    .stat-item .value {
+        font-size: 0.95rem;
+    }
+    
+    .token-list {
+        padding: 10px;
+    }
+    
+    .token-item {
+        padding: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .token-logo {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .token-symbol {
+        font-size: 1rem;
+    }
+    
+    .token-amount {
+        font-size: 0.8rem;
+    }
+    
+    .token-price {
+        font-size: 1rem;
+    }
+    
+    .token-change {
+        font-size: 0.85rem;
+    }
+    
+    .vs-divider {
+        padding: 15px 0;
+    }
+    
+    .vs-circle {
+        width: 60px;
+        height: 60px;
+        font-size: 1.2rem;
+    }
+    
+    .performance-indicator {
+        padding: 10px 20px;
+        min-width: 120px;
+    }
+    
+    #leader-name {
+        font-size: 0.85rem;
+    }
+    
+    #leader-percentage {
+        font-size: 1.2rem;
     }
     
     .controls {
-        flex-direction: column;
+        margin-bottom: 20px;
     }
     
     .btn-primary,
-    .btn-secondary,
-    .btn-danger {
-        width: 100%;
+    .btn-secondary {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+    
+    .voting-section {
+        padding: 20px;
+        margin-top: 20px;
+    }
+    
+    .voting-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .voting-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+    }
+    
+    .voting-container {
+        gap: 15px;
+    }
+    
+    .vote-option {
+        padding: 20px;
+    }
+    
+    .vote-avatar {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .vote-option h3 {
+        font-size: 1.3rem;
+    }
+    
+    .vote-btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+    
+    .vote-count {
+        font-size: 1rem;
     }
 }
