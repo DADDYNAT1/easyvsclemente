@@ -63,10 +63,22 @@ document.addEventListener('DOMContentLoaded', () => {
     portfolios.easy.initialValue = 10000;
     portfolios.clemente.initialValue = 10000;
     
+    // Set initial loading state with default values to prevent empty UI
+    if (!portfolios.easy.totalValue) portfolios.easy.totalValue = 10000;
+    if (!portfolios.clemente.totalValue) portfolios.clemente.totalValue = 10000;
+    
     updateDayCounter();
+    
+    // Display initial state immediately
+    updatePortfolioDisplay('easy');
+    updatePortfolioDisplay('clemente');
+    updatePerformanceIndicator();
+    
+    // Load voting data asynchronously
     loadVotingData();
     updateVoteDisplay();
     
+    // Fetch prices after initial display
     fetchAllPrices();
     
     // Auto-refresh prices every 30 seconds
@@ -215,6 +227,13 @@ async function fetchDexscreenerPrices() {
 
 // Fetch All Prices
 async function fetchAllPrices() {
+    // Add loading class to refresh button
+    const refreshBtn = document.getElementById('refresh-prices-btn');
+    if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = 'Loading...';
+    }
+    
     showNotification('Fetching latest prices...', 'info');
     
     // Log which animation is playing
@@ -223,16 +242,27 @@ async function fetchAllPrices() {
     // Trigger flying animation
     triggerFlyingAnimation();
     
-    await Promise.all([
-        fetchCoinGeckoPrices(),
-        fetchDexscreenerPrices()
-    ]);
-    
-    updatePerformanceIndicator();
-    saveToLocalStorage();
-    saveHistoricalData();
-    
-    showNotification('Prices updated successfully!', 'success');
+    try {
+        await Promise.all([
+            fetchCoinGeckoPrices(),
+            fetchDexscreenerPrices()
+        ]);
+        
+        updatePerformanceIndicator();
+        saveToLocalStorage();
+        saveHistoricalData();
+        
+        showNotification('Prices updated successfully!', 'success');
+    } catch (error) {
+        console.error('Error fetching prices:', error);
+        showNotification('Error updating prices', 'error');
+    } finally {
+        // Reset refresh button
+        if (refreshBtn) {
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = 'Refresh Prices';
+        }
+    }
 }
 
 // Trigger Flying Animation (alternates between Easy and Clemente)
