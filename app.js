@@ -574,7 +574,8 @@ async function castVote(trader) {
         
         if (error) {
             console.error('Error saving vote:', error);
-            alert('Error saving your vote. Please try again.');
+            console.error('Error details:', error.message, error.details);
+            alert(`Error saving your vote: ${error.message || 'Unknown error'}. Please check console for details.`);
             return;
         }
         
