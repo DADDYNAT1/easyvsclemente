@@ -81,28 +81,79 @@ header h1 {
 }
 
 .timer-section {
-    background: var(--bg-card);
-    padding: 15px 30px;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(234, 88, 12, 0.1));
+    padding: 20px 35px;
+    border-radius: 20px;
+    border: 2px solid rgba(245, 158, 11, 0.3);
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timer-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(245, 158, 11, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .timer-section .value {
     color: #f59e0b;
-    font-weight: bold;
-    font-size: 1.5rem;
+    font-weight: 900;
+    font-size: 1.8rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.timer-section .separator {
+    color: #f59e0b;
+    font-weight: 900;
+    font-size: 1.8rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin: 0 5px;
+}
+
+.timer-section .total {
+    color: #f59e0b;
+    font-weight: 900;
+    font-size: 1.8rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .start-date {
-    background: var(--bg-card);
-    padding: 15px 30px;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(234, 88, 12, 0.1));
+    padding: 20px 35px;
+    border-radius: 20px;
+    border: 2px solid rgba(245, 158, 11, 0.3);
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.start-date:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(245, 158, 11, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.start-date .value {
+    color: #f59e0b;
+    font-weight: 900;
+    font-size: 1.8rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .label {
     color: var(--text-secondary);
     margin-right: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .portfolios-comparison {
@@ -272,12 +323,16 @@ header h1 {
 }
 
 .performance-indicator {
-    background: var(--bg-card);
-    padding: 15px 25px;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(234, 88, 12, 0.1));
+    padding: 20px 30px;
+    border-radius: 20px;
+    border: 2px solid rgba(245, 158, 11, 0.3);
     text-align: center;
-    min-width: 150px;
+    min-width: 180px;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .performance-indicator span {
@@ -285,14 +340,20 @@ header h1 {
 }
 
 #leader-name {
-    font-weight: bold;
+    font-weight: 900;
     color: #f59e0b;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 #leader-percentage {
-    font-size: 1.2rem;
+    font-size: 1.8rem;
+    font-weight: 900;
     color: var(--positive);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .controls {
