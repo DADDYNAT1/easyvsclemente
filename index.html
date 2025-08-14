@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30-Day Portfolio Challenge: Easy vs Clemente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>30-Day Portfolio Challenge</h1>
+            <div class="challenge-info">
+                <div class="timer-section">
+                    <span class="label">Day</span>
+                    <span id="current-day" class="value">1</span>
+                    <span class="separator">/</span>
+                    <span class="total">30</span>
+                </div>
+                <div class="start-date">
+                    <span class="label">Started:</span>
+                    <span id="start-date" class="value">--</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="portfolios-comparison">
+            <div class="portfolio" id="easy-portfolio">
+                <div class="portfolio-header">
+                    <h2><img src="easy.jpg" alt="Easy" class="portfolio-icon">Easy</h2>
+                    <div class="portfolio-stats">
+                        <div class="stat-item">
+                            <span class="label">Starting Value</span>
+                            <span class="value">$10,000.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">Current Value</span>
+                            <span class="value" id="easy-total">$0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">24h Change</span>
+                            <span class="value" id="easy-24h-change">0.00%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">Total Change</span>
+                            <span class="value" id="easy-total-change">0.00%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="token-list" id="easy-tokens">
+                    <!-- Tokens will be populated here -->
+                </div>
+            </div>
+
+            <div class="vs-divider">
+                <div class="vs-circle">VS</div>
+                <div class="performance-indicator" id="performance-indicator">
+                    <span id="leader-name">--</span>
+                    <span id="leader-percentage">0%</span>
+                </div>
+            </div>
+
+            <div class="portfolio" id="clemente-portfolio">
+                <div class="portfolio-header">
+                    <h2><img src="clemente.jpg" alt="Clemente" class="portfolio-icon">Clemente</h2>
+                    <div class="portfolio-stats">
+                        <div class="stat-item">
+                            <span class="label">Starting Value</span>
+                            <span class="value">$10,000.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">Current Value</span>
+                            <span class="value" id="clemente-total">$0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">24h Change</span>
+                            <span class="value" id="clemente-24h-change">0.00%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">Total Change</span>
+                            <span class="value" id="clemente-total-change">0.00%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="token-list" id="clemente-tokens">
+                    <!-- Tokens will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="refresh-prices-btn" class="btn-secondary">Refresh Prices</button>
+        </div>
+
+        <!-- Voting Section -->
+        <div class="voting-section">
+            <h2>Who Will Win? Cast Your Vote!</h2>
+            <p class="voting-subtitle">Vote for who you think will have the best portfolio after 30 days</p>
+            
+            <div class="voting-container">
+                <div class="vote-option" id="vote-easy">
+                    <img src="easy.jpg" alt="Easy" class="vote-avatar">
+                    <h3>Easy</h3>
+                    <button class="vote-btn" onclick="castVote('easy')">Vote for Easy</button>
+                    <div class="vote-count" id="easy-votes">0 votes</div>
+                </div>
+                
+                <div class="vote-results">
+                    <div class="vote-bar-container">
+                        <div class="vote-bar easy-bar" id="easy-bar"></div>
+                        <div class="vote-percentage" id="easy-percentage">50%</div>
+                    </div>
+                    <div class="total-votes" id="total-votes">Total Votes: 0</div>
+                    <div class="vote-bar-container">
+                        <div class="vote-bar clemente-bar" id="clemente-bar"></div>
+                        <div class="vote-percentage" id="clemente-percentage">50%</div>
+                    </div>
+                </div>
+                
+                <div class="vote-option" id="vote-clemente">
+                    <img src="clemente.jpg" alt="Clemente" class="vote-avatar">
+                    <h3>Clemente</h3>
+                    <button class="vote-btn" onclick="castVote('clemente')">Vote for Clemente</button>
+                    <div class="vote-count" id="clemente-votes">0 votes</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Token Input Modal -->
+        <div id="token-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Add Token Information</h3>
+                <div class="token-form">
+                    <input type="text" id="token-symbol" placeholder="Token Symbol (e.g., PEPE)">
+                    <input type="text" id="token-contract" placeholder="Contract Address">
+                    <input type="number" id="easy-amount" placeholder="Easy's Amount" step="any">
+                    <input type="number" id="clemente-amount" placeholder="Clemente's Amount" step="any">
+                    <button id="add-token-btn" class="btn-primary">Add Token</button>
+                </div>
+                <div id="token-list-modal">
+                    <h4>Current Tokens</h4>
+                    <div id="current-tokens"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
