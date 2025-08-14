@@ -1,3 +1,11 @@
+// Initialize Supabase
+const SUPABASE_URL = 'https://qflrkqitelvefnmkuexf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmbHJrcWl0ZWx2ZWZubWt1ZXhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQwMTc1NDksImV4cCI6MjA0OTU5MzU0OX0.4k_MvgJa0WLaxN8r_VMJMJcspFGGrMsFi3DiOiJzdXE';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Track which animation to play next
+let nextAnimation = 'easy';
+
 // Portfolio Data Structure
 const portfolios = {
     easy: {
@@ -41,7 +49,8 @@ let challengeData = {
 let votingData = {
     easyVotes: 0,
     clementeVotes: 0,
-    hasVoted: false
+    // Removed hasVoted to allow multiple votes for testing/demo purposes
+    // In production, you'd want a backend to track unique voters
 };
 
 // Initialize Application
@@ -208,6 +217,9 @@ async function fetchDexscreenerPrices() {
 async function fetchAllPrices() {
     showNotification('Fetching latest prices...', 'info');
     
+    // Log which animation is playing
+    console.log('Next animation:', nextAnimation);
+    
     // Trigger flying animation
     triggerFlyingAnimation();
     
@@ -223,19 +235,38 @@ async function fetchAllPrices() {
     showNotification('Prices updated successfully!', 'success');
 }
 
-// Trigger Flying Easy Animation
+// Trigger Flying Animation (alternates between Easy and Clemente)
 function triggerFlyingAnimation() {
-    const flyingEasy = document.getElementById('flying-easy');
-    if (flyingEasy) {
-        flyingEasy.classList.remove('animate');
-        // Force reflow to restart animation
-        void flyingEasy.offsetWidth;
-        flyingEasy.classList.add('animate');
-        
-        // Remove animation class after it completes
-        setTimeout(() => {
+    if (nextAnimation === 'easy') {
+        const flyingEasy = document.getElementById('flying-easy');
+        if (flyingEasy) {
             flyingEasy.classList.remove('animate');
-        }, 4000);
+            // Force reflow to restart animation
+            void flyingEasy.offsetWidth;
+            flyingEasy.classList.add('animate');
+            
+            // Remove animation class after it completes
+            setTimeout(() => {
+                flyingEasy.classList.remove('animate');
+            }, 4000);
+        }
+        // Next time, play Clemente
+        nextAnimation = 'clemente';
+    } else {
+        const flyingClemente = document.getElementById('flying-clemente');
+        if (flyingClemente) {
+            flyingClemente.classList.remove('animate');
+            // Force reflow to restart animation
+            void flyingClemente.offsetWidth;
+            flyingClemente.classList.add('animate');
+            
+            // Remove animation class after it completes
+            setTimeout(() => {
+                flyingClemente.classList.remove('animate');
+            }, 4000);
+        }
+        // Next time, play Easy
+        nextAnimation = 'easy';
     }
 }
 
@@ -310,19 +341,39 @@ function updatePerformanceIndicator() {
     
     const leaderName = document.getElementById('leader-name');
     const leaderPercentage = document.getElementById('leader-percentage');
+    const easyStatus = document.getElementById('easy-status');
+    const clementeStatus = document.getElementById('clemente-status');
     
     if (easyChange > clementeChange) {
         leaderName.textContent = 'Easy Leading';
         leaderPercentage.textContent = `+${formatPercentage(easyChange - clementeChange)}`;
         leaderPercentage.style.color = '#10b981';
+        
+        // Update status indicators
+        easyStatus.textContent = 'Winning';
+        easyStatus.className = 'status-indicator winning';
+        clementeStatus.textContent = 'Losing';
+        clementeStatus.className = 'status-indicator losing';
     } else if (clementeChange > easyChange) {
         leaderName.textContent = 'Clemente Leading';
         leaderPercentage.textContent = `+${formatPercentage(clementeChange - easyChange)}`;
         leaderPercentage.style.color = '#10b981';
+        
+        // Update status indicators
+        clementeStatus.textContent = 'Winning';
+        clementeStatus.className = 'status-indicator winning';
+        easyStatus.textContent = 'Losing';
+        easyStatus.className = 'status-indicator losing';
     } else {
         leaderName.textContent = 'Tied';
         leaderPercentage.textContent = '0%';
         leaderPercentage.style.color = '#94a3b8';
+        
+        // Update status indicators
+        easyStatus.textContent = 'Tied';
+        easyStatus.className = 'status-indicator tied';
+        clementeStatus.textContent = 'Tied';
+        clementeStatus.className = 'status-indicator tied';
     }
 }
 
@@ -480,36 +531,63 @@ function showNotification(message, type = 'info') {
     // You could add a toast notification here
 }
 
-// Voting System Functions
-function loadVotingData() {
-    const saved = localStorage.getItem('votingData');
-    if (saved) {
-        votingData = JSON.parse(saved);
+// Voting System Functions with Supabase
+async function loadVotingData() {
+    try {
+        // Fetch all votes from Supabase
+        const { data, error } = await supabase
+            .from('votes')
+            .select('trader');
+        
+        if (error) {
+            console.error('Error loading votes:', error);
+            // Fall back to localStorage if Supabase fails
+            const saved = localStorage.getItem('votingData');
+            if (saved) {
+                votingData = JSON.parse(saved);
+            }
+            return;
+        }
+        
+        // Count votes for each trader
+        votingData.easyVotes = data.filter(vote => vote.trader === 'easy').length;
+        votingData.clementeVotes = data.filter(vote => vote.trader === 'clemente').length;
+        
+        console.log('Loaded votes from Supabase:', votingData);
+        updateVoteDisplay();
+    } catch (err) {
+        console.error('Error:', err);
     }
 }
 
 function saveVotingData() {
+    // Still save to localStorage as backup
     localStorage.setItem('votingData', JSON.stringify(votingData));
 }
 
-function castVote(trader) {
-    if (votingData.hasVoted) {
-        alert('You have already voted! One vote per person.');
-        return;
+async function castVote(trader) {
+    try {
+        // Save vote to Supabase
+        const { error } = await supabase
+            .from('votes')
+            .insert([{ trader: trader }]);
+        
+        if (error) {
+            console.error('Error saving vote:', error);
+            alert('Error saving your vote. Please try again.');
+            return;
+        }
+        
+        // Reload votes to get the latest count
+        await loadVotingData();
+        
+        // Show thank you message with current vote count
+        const totalVotes = votingData.easyVotes + votingData.clementeVotes;
+        alert(`Thank you for voting for ${trader === 'easy' ? 'Easy' : 'Clemente'}!\nTotal votes from everyone: ${totalVotes}`);
+    } catch (err) {
+        console.error('Error:', err);
+        alert('Error saving your vote. Please try again.');
     }
-    
-    if (trader === 'easy') {
-        votingData.easyVotes++;
-    } else if (trader === 'clemente') {
-        votingData.clementeVotes++;
-    }
-    
-    votingData.hasVoted = true;
-    saveVotingData();
-    updateVoteDisplay();
-    
-    // Show thank you message
-    alert(`Thank you for voting for ${trader === 'easy' ? 'Easy' : 'Clemente'}!`);
 }
 
 function updateVoteDisplay() {
@@ -537,17 +615,28 @@ function updateVoteDisplay() {
     document.getElementById('easy-bar').style.width = `${easyPercentage}%`;
     document.getElementById('clemente-bar').style.width = `${clementePercentage}%`;
     
-    // Disable buttons if already voted
-    if (votingData.hasVoted) {
-        const buttons = document.querySelectorAll('.vote-btn');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-            btn.textContent = 'Already Voted';
-            btn.style.opacity = '0.5';
-            btn.style.cursor = 'not-allowed';
-        });
-    }
+    // Buttons remain active for multiple votes
+    // In production, you'd disable based on server-side tracking
 }
 
 // Make castVote available globally for onclick handlers
 window.castVote = castVote;
+
+// Test function to trigger Clemente animation directly
+window.testClementeAnimation = function() {
+    const flyingClemente = document.getElementById('flying-clemente');
+    if (flyingClemente) {
+        console.log('Testing Clemente animation...');
+        flyingClemente.classList.remove('animate');
+        // Force reflow to restart animation
+        void flyingClemente.offsetWidth;
+        flyingClemente.classList.add('animate');
+        
+        // Remove animation class after it completes
+        setTimeout(() => {
+            flyingClemente.classList.remove('animate');
+        }, 4000);
+    } else {
+        console.log('Clemente element not found!');
+    }
+};

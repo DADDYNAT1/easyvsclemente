@@ -8,11 +8,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <!-- Flying Easy Animation -->
     <div id="flying-easy" class="flying-easy">
         <img src="easy fly .png" alt="Flying Easy">
+    </div>
+    
+    <!-- Flying Clemente Animation -->
+    <div id="flying-clemente" class="flying-clemente">
+        <img src="Clemente Fly.png" alt="Flying Clemente">
     </div>
     
     <div class="container">
@@ -35,7 +42,11 @@
         <div class="portfolios-comparison">
             <div class="portfolio" id="easy-portfolio">
                 <div class="portfolio-header">
-                    <h2><img src="easy.jpg" alt="Easy" class="portfolio-icon">Easy</h2>
+                    <h2>
+                        <img src="easy.jpg" alt="Easy" class="portfolio-icon">
+                        Easy
+                        <span class="status-indicator" id="easy-status"></span>
+                    </h2>
                     <div class="portfolio-stats">
                         <div class="stat-item">
                             <span class="label">Starting Value</span>
@@ -70,7 +81,11 @@
 
             <div class="portfolio" id="clemente-portfolio">
                 <div class="portfolio-header">
-                    <h2><img src="clemente.jpg" alt="Clemente" class="portfolio-icon">Clemente</h2>
+                    <h2>
+                        <img src="clemente.jpg" alt="Clemente" class="portfolio-icon">
+                        Clemente
+                        <span class="status-indicator" id="clemente-status"></span>
+                    </h2>
                     <div class="portfolio-stats">
                         <div class="stat-item">
                             <span class="label">Starting Value</span>

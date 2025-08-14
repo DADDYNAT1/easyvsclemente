@@ -450,8 +450,8 @@ header h1 {
 .flying-easy {
     position: fixed;
     top: 50%;
-    left: -200px;
-    width: 150px;
+    left: -250px;
+    width: 180px;
     height: auto;
     z-index: 9999;
     pointer-events: none;
@@ -469,7 +469,7 @@ header h1 {
 
 @keyframes flyAcross {
     0% {
-        left: -200px;
+        left: -250px;
         transform: translateY(-50%) rotate(-10deg);
         opacity: 0;
     }
@@ -483,9 +483,137 @@ header h1 {
         opacity: 1;
     }
     100% {
-        left: calc(100% + 200px);
+        left: calc(100% + 250px);
         transform: translateY(-50%) rotate(-5deg);
         opacity: 0;
+    }
+}
+
+/* Flying Clemente Animation */
+.flying-clemente {
+    position: fixed;
+    top: 65%;
+    right: -250px;
+    width: 180px;
+    height: auto;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.flying-clemente img {
+    width: 100%;
+    height: auto;
+}
+
+.flying-clemente.animate {
+    animation: flyAcrossReverse 4s ease-in-out;
+}
+
+@keyframes flyAcrossReverse {
+    0% {
+        right: -250px;
+        transform: translateY(-50%) rotate(10deg) scaleX(-1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-40%) rotate(-5deg) scaleX(-1);
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        right: calc(100% + 250px);
+        transform: translateY(-50%) rotate(5deg) scaleX(-1);
+        opacity: 0;
+    }
+}
+
+/* Status Indicators */
+.status-indicator {
+    display: inline-block;
+    margin-left: 20px;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+.status-indicator.winning {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    border: 2px solid #10b981;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+    animation: winningPulse 1.5s infinite;
+}
+
+.status-indicator.winning::before {
+    content: "🏆 ";
+    font-size: 1.2rem;
+}
+
+.status-indicator.losing {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #ffffff;
+    border: 2px solid #ef4444;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+    animation: losingShake 3s infinite;
+}
+
+.status-indicator.losing::before {
+    content: "😤 ";
+    font-size: 1.2rem;
+}
+
+.status-indicator.tied {
+    background: linear-gradient(135deg, #94a3b8, #64748b);
+    color: #ffffff;
+    border: 2px solid #94a3b8;
+    box-shadow: 0 0 10px rgba(148, 163, 184, 0.3);
+}
+
+.status-indicator.tied::before {
+    content: "🤝 ";
+    font-size: 1.2rem;
+}
+
+@keyframes winningPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+    }
+}
+
+@keyframes losingShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10% {
+        transform: translateX(-2px);
+    }
+    20% {
+        transform: translateX(2px);
+    }
+    30% {
+        transform: translateX(-2px);
+    }
+    40% {
+        transform: translateX(2px);
+    }
+    50% {
+        transform: translateX(0);
     }
 }
 
