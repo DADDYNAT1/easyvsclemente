@@ -225,8 +225,20 @@ function updatePortfolioDisplay(portfolioKey) {
     const portfolio = portfolios[portfolioKey];
     const prefix = portfolioKey;
     
-    // Update total value
-    document.getElementById(`${prefix}-total`).textContent = formatCurrency(portfolio.totalValue);
+    // Update total value with color based on profit/loss
+    const totalElement = document.getElementById(`${prefix}-total`);
+    totalElement.textContent = formatCurrency(portfolio.totalValue);
+    
+    // Add color class based on comparison to $10,000 starting value
+    if (portfolio.totalValue > 10000) {
+        totalElement.classList.add('positive');
+        totalElement.classList.remove('negative');
+    } else if (portfolio.totalValue < 10000) {
+        totalElement.classList.add('negative');
+        totalElement.classList.remove('positive');
+    } else {
+        totalElement.classList.remove('positive', 'negative');
+    }
     
     // Update 24h change
     const change24h = portfolio.totalValue24hAgo > 0 
