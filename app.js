@@ -208,6 +208,9 @@ async function fetchDexscreenerPrices() {
 async function fetchAllPrices() {
     showNotification('Fetching latest prices...', 'info');
     
+    // Trigger flying animation
+    triggerFlyingAnimation();
+    
     await Promise.all([
         fetchCoinGeckoPrices(),
         fetchDexscreenerPrices()
@@ -218,6 +221,22 @@ async function fetchAllPrices() {
     saveHistoricalData();
     
     showNotification('Prices updated successfully!', 'success');
+}
+
+// Trigger Flying Easy Animation
+function triggerFlyingAnimation() {
+    const flyingEasy = document.getElementById('flying-easy');
+    if (flyingEasy) {
+        flyingEasy.classList.remove('animate');
+        // Force reflow to restart animation
+        void flyingEasy.offsetWidth;
+        flyingEasy.classList.add('animate');
+        
+        // Remove animation class after it completes
+        setTimeout(() => {
+            flyingEasy.classList.remove('animate');
+        }, 4000);
+    }
 }
 
 // Update Portfolio Display

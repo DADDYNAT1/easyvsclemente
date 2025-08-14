@@ -446,6 +446,49 @@ header h1 {
     background: #dc2626;
 }
 
+/* Flying Easy Animation */
+.flying-easy {
+    position: fixed;
+    top: 50%;
+    left: -200px;
+    width: 150px;
+    height: auto;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.flying-easy img {
+    width: 100%;
+    height: auto;
+}
+
+.flying-easy.animate {
+    animation: flyAcross 4s ease-in-out;
+}
+
+@keyframes flyAcross {
+    0% {
+        left: -200px;
+        transform: translateY(-50%) rotate(-10deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-60%) rotate(5deg);
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        left: calc(100% + 200px);
+        transform: translateY(-50%) rotate(-5deg);
+        opacity: 0;
+    }
+}
+
 /* Voting Section */
 .voting-section {
     background: var(--bg-card);
