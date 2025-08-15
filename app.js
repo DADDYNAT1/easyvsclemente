@@ -58,8 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadFromLocalStorage();
     initializeEventListeners();
     
-    // Always use 8/11/2025 as start date and $10,000 initial values
-    challengeData.startDate = new Date('2025-08-11').toISOString();
+    // Always use 8/11/2024 as start date and $10,000 initial values
+    challengeData.startDate = new Date('2024-08-11').toISOString();
     portfolios.easy.initialValue = 10000;
     portfolios.clemente.initialValue = 10000;
     
@@ -597,6 +597,24 @@ function saveVotingData() {
 }
 
 async function castVote(trader) {
+    // Check if user has already voted today
+    const lastVoteDate = localStorage.getItem('lastVoteDate');
+    const today = new Date().toDateString();
+    
+    if (lastVoteDate === today) {
+        // Calculate time until midnight for next vote
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        
+        const hoursUntilNextVote = Math.floor((tomorrow - now) / (1000 * 60 * 60));
+        const minutesUntilNextVote = Math.floor(((tomorrow - now) % (1000 * 60 * 60)) / (1000 * 60));
+        
+        alert(`You've already voted today! Come back in ${hoursUntilNextVote} hours and ${minutesUntilNextVote} minutes to vote again.`);
+        return;
+    }
+    
     try {
         // Save vote to Supabase
         const { error } = await supabase
@@ -610,12 +628,15 @@ async function castVote(trader) {
             return;
         }
         
+        // Save vote date to localStorage
+        localStorage.setItem('lastVoteDate', today);
+        
         // Reload votes to get the latest count
         await loadVotingData();
         
         // Show thank you message with current vote count
         const totalVotes = votingData.easyVotes + votingData.clementeVotes;
-        alert(`Thank you for voting for ${trader === 'easy' ? 'Easy' : 'Clemente'}!\nTotal votes from everyone: ${totalVotes}`);
+        alert(`Thank you for voting for ${trader === 'easy' ? 'Easy' : 'Clemente'}!\nTotal votes from everyone: ${totalVotes}\n\nYou can vote again tomorrow!`);
     } catch (err) {
         console.error('Error:', err);
         alert('Error saving your vote. Please try again.');
@@ -647,8 +668,28 @@ function updateVoteDisplay() {
     document.getElementById('easy-bar').style.width = `${easyPercentage}%`;
     document.getElementById('clemente-bar').style.width = `${clementePercentage}%`;
     
-    // Buttons remain active for multiple votes
-    // In production, you'd disable based on server-side tracking
+    // Check if user has already voted today
+    const lastVoteDate = localStorage.getItem('lastVoteDate');
+    const today = new Date().toDateString();
+    const buttons = document.querySelectorAll('.vote-btn');
+    
+    if (lastVoteDate === today) {
+        // User has already voted today - disable buttons
+        buttons.forEach(btn => {
+            btn.disabled = true;
+            btn.textContent = 'Voted Today ✓';
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
+        });
+    } else {
+        // User can vote - enable buttons
+        buttons.forEach((btn, index) => {
+            btn.disabled = false;
+            btn.textContent = index === 0 ? 'Vote for Easy' : 'Vote for Clemente';
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+        });
+    }
 }
 
 // Make castVote available globally for onclick handlers
