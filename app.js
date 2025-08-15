@@ -126,13 +126,14 @@ function startNewChallenge() {
 function updateDayCounter() {
     if (challengeData.startDate) {
         const start = new Date('2025-08-11');
-        const now = new Date('2025-08-13'); // Today is Aug 13
+        const now = new Date(); // Use actual current date
         
-        // Calculate days: Aug 11 = Day 1, Aug 12 = Day 2, Aug 13 = Day 3
+        // Calculate days: Aug 11 = Day 1, Aug 12 = Day 2, Aug 15 = Day 5, etc.
         const msPerDay = 1000 * 60 * 60 * 24;
         const daysDiff = Math.floor((now - start) / msPerDay) + 1;
         
-        challengeData.currentDay = Math.min(daysDiff, 30);
+        // Ensure day is between 1 and 30
+        challengeData.currentDay = Math.max(1, Math.min(daysDiff, 30));
         document.getElementById('current-day').textContent = challengeData.currentDay;
         document.getElementById('start-date').textContent = '8/11/2025';
     }
