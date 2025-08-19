@@ -639,8 +639,9 @@ header h1 {
 .pio-portfolio {
     max-width: 800px;
     margin: 0 auto;
-    background: linear-gradient(135deg, rgba(247, 147, 26, 0.1), rgba(255, 184, 77, 0.05));
+    background: linear-gradient(135deg, rgba(247, 147, 26, 0.25), rgba(255, 184, 77, 0.15));
     border: 2px solid #f7931a;
+    box-shadow: 0 0 30px rgba(247, 147, 26, 0.2);
 }
 
 .bitcoin-info {
@@ -651,10 +652,11 @@ header h1 {
     display: flex;
     align-items: center;
     gap: 30px;
-    background: var(--bg-secondary);
+    background: rgba(28, 32, 39, 0.95);
     padding: 20px;
     border-radius: 12px;
-    border: 1px solid rgba(247, 147, 26, 0.3);
+    border: 1px solid rgba(247, 147, 26, 0.5);
+    backdrop-filter: blur(10px);
 }
 
 .btc-logo {
