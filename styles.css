@@ -186,6 +186,73 @@ header h1 {
     letter-spacing: 1px;
 }
 
+/* Creator Section */
+.creator-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    background: var(--bg-card);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.creator-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+.creator-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+    box-shadow: 0 0 10px rgba(100, 200, 255, 0.3);
+}
+
+.creator-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.created-by {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.creator-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.creator-link:hover {
+    color: #80c8ff;
+}
+
+.x-icon {
+    transition: transform 0.3s ease;
+}
+
+.creator-link:hover .x-icon {
+    transform: scale(1.1);
+}
+
 .portfolios-comparison {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
