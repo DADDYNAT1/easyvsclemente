@@ -35,6 +35,17 @@ const portfolios = {
         totalValue24hAgo: 0,
         initialValue: 0,
         api: "dexscreener"
+    },
+    pio: {
+        name: "Pio",
+        btcAmount: 0.084, // $10,000 worth of BTC at $119,500
+        entryPrice: 119500,
+        currentPrice: 0,
+        totalValue: 0,
+        totalValue24hAgo: 0,
+        initialValue: 10000,
+        change24h: 0,
+        api: "coingecko"
     }
 };
 
@@ -180,6 +191,34 @@ async function fetchCoinGeckoPrices() {
     }
 }
 
+// Fetch Bitcoin Price for Pio
+async function fetchBitcoinPrice() {
+    const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true';
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.bitcoin) {
+            portfolios.pio.currentPrice = data.bitcoin.usd;
+            portfolios.pio.change24h = data.bitcoin.usd_24h_change || 0;
+            
+            // Calculate total value
+            portfolios.pio.totalValue = portfolios.pio.btcAmount * portfolios.pio.currentPrice;
+            
+            // Calculate 24h ago value
+            const price24hAgo = portfolios.pio.currentPrice / (1 + portfolios.pio.change24h / 100);
+            portfolios.pio.totalValue24hAgo = portfolios.pio.btcAmount * price24hAgo;
+            
+            updatePioPortfolio();
+            
+            console.log(`Bitcoin: Price = $${portfolios.pio.currentPrice}, Amount = ${portfolios.pio.btcAmount} BTC, Total = $${portfolios.pio.totalValue}`);
+        }
+    } catch (error) {
+        console.error('Error fetching Bitcoin price:', error);
+    }
+}
+
 // Fetch Prices from Dexscreener
 async function fetchDexscreenerPrices() {
     // For now, we'll need contract addresses to be added
@@ -246,7 +285,8 @@ async function fetchAllPrices() {
     try {
         await Promise.all([
             fetchCoinGeckoPrices(),
-            fetchDexscreenerPrices()
+            fetchDexscreenerPrices(),
+            fetchBitcoinPrice()
         ]);
         
         updatePerformanceIndicator();
@@ -364,48 +404,96 @@ function updatePortfolioDisplay(portfolioKey) {
     });
 }
 
+// Update Pio's Portfolio Display
+function updatePioPortfolio() {
+    const portfolio = portfolios.pio;
+    
+    // Update Bitcoin amount display
+    document.getElementById('btc-amount').textContent = portfolio.btcAmount.toFixed(4);
+    
+    // Update current price
+    document.getElementById('btc-current-price').textContent = formatCurrency(portfolio.currentPrice);
+    
+    // Update total value
+    const totalElement = document.getElementById('pio-total');
+    totalElement.textContent = formatCurrency(portfolio.totalValue);
+    
+    // Add color class based on comparison to $10,000 starting value
+    if (portfolio.totalValue > 10000) {
+        totalElement.classList.add('positive');
+        totalElement.classList.remove('negative');
+    } else if (portfolio.totalValue < 10000) {
+        totalElement.classList.add('negative');
+        totalElement.classList.remove('positive');
+    } else {
+        totalElement.classList.remove('positive', 'negative');
+    }
+    
+    // Update 24h change
+    const change24hElement = document.getElementById('pio-24h-change');
+    change24hElement.textContent = formatPercentage(portfolio.change24h);
+    change24hElement.className = `value ${portfolio.change24h >= 0 ? 'positive' : 'negative'}`;
+    
+    // Update total change from $10,000 starting value
+    const totalChange = ((portfolio.totalValue - portfolio.initialValue) / portfolio.initialValue * 100);
+    
+    const totalChangeElement = document.getElementById('pio-total-change');
+    totalChangeElement.textContent = formatPercentage(totalChange);
+    totalChangeElement.className = `value ${totalChange >= 0 ? 'positive' : 'negative'}`;
+}
+
 // Update Performance Indicator
 function updatePerformanceIndicator() {
     const initialValue = 10000;
     const easyChange = ((portfolios.easy.totalValue - initialValue) / initialValue * 100);
     const clementeChange = ((portfolios.clemente.totalValue - initialValue) / initialValue * 100);
+    const pioChange = ((portfolios.pio.totalValue - initialValue) / initialValue * 100);
     
     const leaderName = document.getElementById('leader-name');
     const leaderPercentage = document.getElementById('leader-percentage');
     const easyStatus = document.getElementById('easy-status');
     const clementeStatus = document.getElementById('clemente-status');
+    const pioStatus = document.getElementById('pio-status');
     
+    // Find the leader among all three
+    const performances = [
+        { name: 'Easy', change: easyChange, element: easyStatus },
+        { name: 'Clemente', change: clementeChange, element: clementeStatus },
+        { name: 'Pio (BTC)', change: pioChange, element: pioStatus }
+    ];
+    
+    performances.sort((a, b) => b.change - a.change);
+    
+    // Update leader display (for Easy vs Clemente)
     if (easyChange > clementeChange) {
         leaderName.textContent = 'Easy Leading';
         leaderPercentage.textContent = `+${formatPercentage(easyChange - clementeChange)}`;
         leaderPercentage.style.color = '#10b981';
-        
-        // Update status indicators
-        easyStatus.textContent = 'Winning';
-        easyStatus.className = 'status-indicator winning';
-        clementeStatus.textContent = 'Losing';
-        clementeStatus.className = 'status-indicator losing';
     } else if (clementeChange > easyChange) {
         leaderName.textContent = 'Clemente Leading';
         leaderPercentage.textContent = `+${formatPercentage(clementeChange - easyChange)}`;
         leaderPercentage.style.color = '#10b981';
-        
-        // Update status indicators
-        clementeStatus.textContent = 'Winning';
-        clementeStatus.className = 'status-indicator winning';
-        easyStatus.textContent = 'Losing';
-        easyStatus.className = 'status-indicator losing';
     } else {
         leaderName.textContent = 'Tied';
         leaderPercentage.textContent = '0%';
         leaderPercentage.style.color = '#94a3b8';
-        
-        // Update status indicators
-        easyStatus.textContent = 'Tied';
-        easyStatus.className = 'status-indicator tied';
-        clementeStatus.textContent = 'Tied';
-        clementeStatus.className = 'status-indicator tied';
     }
+    
+    // Update all status indicators based on ranking
+    performances.forEach((perf, index) => {
+        if (perf.element) {
+            if (index === 0) {
+                perf.element.textContent = 'Winning';
+                perf.element.className = 'status-indicator winning';
+            } else if (index === 2) {
+                perf.element.textContent = 'Losing';
+                perf.element.className = 'status-indicator losing';
+            } else {
+                perf.element.textContent = '2nd Place';
+                perf.element.className = 'status-indicator tied';
+            }
+        }
+    });
 }
 
 // Format Helpers
@@ -471,6 +559,11 @@ function loadFromLocalStorage() {
             portfolios.clemente.totalValue = parsed.clemente.totalValue || 0;
             portfolios.clemente.totalValue24hAgo = parsed.clemente.totalValue24hAgo || 0;
             portfolios.clemente.initialValue = parsed.clemente.initialValue || 0;
+        }
+        if (parsed.pio) {
+            portfolios.pio.totalValue = parsed.pio.totalValue || 0;
+            portfolios.pio.totalValue24hAgo = parsed.pio.totalValue24hAgo || 0;
+            portfolios.pio.currentPrice = parsed.pio.currentPrice || 0;
         }
     }
     

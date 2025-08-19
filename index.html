@@ -115,6 +115,57 @@
             <button id="refresh-prices-btn" class="btn-secondary">Refresh Prices</button>
         </div>
 
+        <!-- Pio's Bitcoin Portfolio -->
+        <div class="pio-section">
+            <h2 class="pio-title">The Bitcoin Benchmark</h2>
+            <div class="portfolio pio-portfolio" id="pio-portfolio">
+                <div class="portfolio-header">
+                    <h2>
+                        <img src="pio.jpg" alt="Pio" class="portfolio-icon">
+                        Pio (Bitcoin Only)
+                        <span class="status-indicator" id="pio-status"></span>
+                    </h2>
+                    <div class="portfolio-stats">
+                        <div class="stat-item">
+                            <span class="label">Starting Value</span>
+                            <span class="value">$10,000.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">Current Value</span>
+                            <span class="value" id="pio-total">$0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">24h Change</span>
+                            <span class="value" id="pio-24h-change">0.00%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">Total Change</span>
+                            <span class="value" id="pio-total-change">0.00%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bitcoin-info">
+                    <div class="btc-details">
+                        <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" alt="Bitcoin" class="btc-logo">
+                        <div class="btc-stats">
+                            <div class="btc-amount">
+                                <span class="label">BTC Amount:</span>
+                                <span id="btc-amount">0.084</span> BTC
+                            </div>
+                            <div class="btc-price">
+                                <span class="label">Entry Price:</span>
+                                <span>$119,500</span>
+                            </div>
+                            <div class="btc-current">
+                                <span class="label">Current Price:</span>
+                                <span id="btc-current-price">$0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Voting Section -->
         <div class="voting-section">
             <h2>Who Will Win? Cast Your Vote!</h2>
